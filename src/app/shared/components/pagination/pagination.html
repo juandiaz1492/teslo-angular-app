@@ -1,0 +1,18 @@
+<div class="join flex justify-center items-center">
+    @for (page of pagesArray(); track page) {
+
+    <input class="join-item btn btn-square" 
+    type="radio" 
+    name="options" 
+    aria-label="{{page}}"
+    [class.btn-primary]="page == activatePage()"
+    [routerLink]="[]"
+    [queryParams]="{ page: page}"
+    (click)= "changePage(page)"
+     />
+    }
+
+    @empty {
+        <p>No hay páginas</p>
+    }
+</div>
