@@ -1,7 +1,7 @@
 import { computed, inject, Injectable, resource, signal } from '@angular/core';
 import { User } from '../interfaces/user.interface';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import { AuthResponse } from '../interfaces/auth-response.interface';
 import { catchError, firstValueFrom, map, Observable, of, tap } from 'rxjs';
 import { PLATFORM_ID } from '@angular/core';
