@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { Product } from '../../../products/interfaces/product-response.interface';
 import { CarouselProduct } from "../../../products/components/carousel-product/carousel-product";
+import { CurrencyPipe } from '@angular/common';
 
 export type Gender = 'men' | 'women' | 'kid' | 'unisex';
 export interface User {
@@ -16,7 +17,7 @@ export interface User {
 
 @Component({
   selector: 'app-product-page',
-  imports: [CarouselProduct],
+  imports: [CarouselProduct, CurrencyPipe],
   templateUrl: './product-page.html',
 })
 export class ProductPage {

@@ -6,10 +6,26 @@ export function authInterceptor(
     req: HttpRequest<unknown>, 
     next: HttpHandlerFn) {
     
-    const token = inject(AuthService).token();
+    // const token = inject(AuthService).token();
 
-    const newReq = req.clone({
-        headers: req.headers.append('Authorization', `Bearer ${token}`),
-    });
-    return next(newReq);
+    // const newReq = req.clone({
+    //     headers: req.headers.append('Authorization', `Bearer ${token}`),
+    // });
+    // return next(newReq);
+    
+
+  const token = inject(AuthService).token();
+
+  if (!token) {
+    return next(req);
+  }
+
+  const newReq = req.clone({
+    setHeaders: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+
+  return next(newReq);
+
 }
