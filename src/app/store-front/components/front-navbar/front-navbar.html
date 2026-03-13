@@ -61,7 +61,8 @@
         <button class="btn btn-ghost">{{authService.user()?.fullName}}</button>
         <button 
         (click)="authService.logout()"
-        class="btn btn-sm btn-error">Salir</button>
+        class="btn btn-sm btn-error"
+        routerLink="/admin">Salir</button>
     }
     
     @else if (authService.authStatus() == 'not-authenticated') {

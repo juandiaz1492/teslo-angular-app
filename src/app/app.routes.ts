@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { NotAuthenticatedGuard } from './auth/guards/not-authenticated.guard';
+import { AuthenticatedGuard } from './auth/guards/authenticated.guard';
 
 export const routes: Routes = [
     {
@@ -7,22 +8,20 @@ export const routes: Routes = [
         loadChildren: ()=> import('./auth/auth.routes'),
         canMatch:[
             NotAuthenticatedGuard,
-            () =>{
-                console.log('Hola Mundo ')
-            }
         ]
 
     }, 
 
     {
         path: 'admin',
-        loadChildren: () => import('./admin-dashboard/admin-dashboard.routes')
+        loadChildren: () => import('./admin-dashboard/admin-dashboard.routes'),
+        canMatch: [AuthenticatedGuard]
     },
-
 
     {
         path: '', 
-        loadChildren: ()=> import('./store-front/store-front.routes')
+        loadChildren: ()=> import('./store-front/store-front.routes'),
+        canMatch: [AuthenticatedGuard]
     }
 
 

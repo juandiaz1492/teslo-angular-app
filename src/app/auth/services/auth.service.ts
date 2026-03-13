@@ -1,3 +1,4 @@
+import { Route } from '@angular/router';
 import { computed, inject, Injectable, resource, signal } from '@angular/core';
 import { User } from '../interfaces/user.interface';
 import { HttpClient } from '@angular/common/http';
@@ -57,19 +58,12 @@ export class AuthService {
 
     register(email: string, password: string, username: string): Observable<boolean> {
 
-        console.log('CREANDO USUARIO:', {
-            email,
-            password,
-            username
-        });
-
         return this.http.post<AuthResponse>(`${baseUrl}/auth/register`, {
             email: email,
             password: password,
             fullName: username
         }).pipe(
             map(() => true),
-            catchError(() => of(false))
         )
     }
 
@@ -103,6 +97,7 @@ export class AuthService {
         this._authStatus.set('not-authenticated');
         this._token.set(null);
         localStorage.removeItem('token');
+
     }
 
 

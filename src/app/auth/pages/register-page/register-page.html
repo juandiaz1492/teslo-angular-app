@@ -18,6 +18,20 @@
         <input type="password" class="grow" placeholder="Contraseña" formControlName="password" />
     </label>
 
+    @if (passwordControl?.touched && passwordControl?.invalid) {
+    <div class="mt-1 text-sm text-red-500 flex flex-col gap-1">
+        @if (passwordControl?.errors?.['required']) {
+        <span>La contraseña es obligatoria.</span>
+        }
+        @if (passwordControl?.errors?.['minlength']) {
+        <span>La contraseña debe tener al menos 6 caracteres.</span>
+        }
+        @if (passwordControl?.errors?.['pattern']) {
+        <span>Debe incluir una mayúscula, una minúscula y un número.</span>
+        }
+    </div>
+    }
+
     <label class="input input-bordered flex items-center gap-2">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" class="h-4 w-4 opacity-70">
             <g fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="4">
@@ -41,6 +55,8 @@
     }
     <p class="text-slate-700">
         ¿Ya tienes cuenta?
-        <a routerLink="/auth/login" class="text-secondary">Crea una aquí</a>
+        <a routerLink="/auth/login" class="text-secondary">Inicie sesión aquí</a>
     </p>
+
+    <ngx-sonner-toaster position="top-right" richColors closeButton />
 </form>
