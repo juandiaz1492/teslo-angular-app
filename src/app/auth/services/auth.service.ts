@@ -1,4 +1,4 @@
-import { Route } from '@angular/router';
+import { Route, Router } from '@angular/router';
 import { computed, inject, Injectable, resource, signal } from '@angular/core';
 import { User } from '../interfaces/user.interface';
 import { HttpClient } from '@angular/common/http';
@@ -17,6 +17,7 @@ export class AuthService {
 
     //para el localStorage
     private platformId = inject(PLATFORM_ID);
+    private router = inject(Router);
     private isBrowser = isPlatformBrowser(this.platformId);
 
     private _authStatus = signal<AuthStatus>('checking');
@@ -80,13 +81,17 @@ export class AuthService {
             return of(false);
         }
 
-        return this.http.get<AuthResponse>(`${baseUrl}/auth/check-status`, {
-            // headers: {
-            //     Authorization: `Bearer ${token}`,
-            // }
-        }).pipe(
-            map((resp) => this.handleLoginSuccess(resp))
-        )
+        return this.http.get<AuthResponse>(`${baseUrl}/auth/check-status`).pipe(
+            map((resp) => this.handleLoginSuccess(resp)),
+            catchError(() => {
+                this._user.set(null);
+                this._authStatus.set('not-authenticated');
+                this._token.set(null);
+                localStorage.removeItem('token');
+                this.router.navigateByUrl('/auth/login');
+                return of(false);
+            })
+        );
     }
 
 
@@ -96,7 +101,11 @@ export class AuthService {
         this._user.set(null);
         this._authStatus.set('not-authenticated');
         this._token.set(null);
-        localStorage.removeItem('token');
+        if (this.isBrowser) {
+            localStorage.removeItem('token');
+        }
+
+        //this.router.navigateByUrl('/auth/login');
 
     }
 
