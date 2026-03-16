@@ -4,6 +4,7 @@ import { HomePage } from "./pages/home-page/home-page";
 import { GenderPage } from "./pages/gender-page/gender-page";
 import { ProductPage } from "./pages/product-page/product-page";
 import { NotFoundPage } from "./pages/not-found-page/not-found-page";
+import { BagPage } from "./pages/bag-page/bag-page";
 
 export const storeFrontRoutes: Routes = [
     {
@@ -21,11 +22,16 @@ export const storeFrontRoutes: Routes = [
         {
             path:'product/:idSlug', 
             component: ProductPage
+        },
+        { 
+            path: 'bag', 
+            component: BagPage, 
         }, 
         {
             path:'**', 
             component: NotFoundPage, 
-        }
+        }, 
+        
      ],   
     },
     {

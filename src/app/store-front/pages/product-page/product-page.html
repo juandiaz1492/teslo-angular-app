@@ -22,7 +22,7 @@
         </p>
     </div>
 </div> -->
-<section class="w-full max-w-[1500px] mx-auto px-6 lg:px-12 py-10">
+<section class="w-full max-w-375 mx-auto px-6 lg:px-12 py-10">
     <div class="grid grid-cols-1 xl:grid-cols-2 gap-10 xl:gap-14 items-start">
 
         <!-- Galería -->
@@ -59,10 +59,23 @@
                 <h3 class="text-xl font-semibold mb-3">Tallas disponibles</h3>
                 <div class="flex flex-wrap gap-3">
                     @for (size of productResource.value().sizes; track $index) {
-                    <span class="badge badge-outline badge-lg px-5 py-5 text-sm">
+                    <button type="button" class="badge badge-lg px-5 py-5 text-sm cursor-pointer transition"
+                        [class.badge-primary]="selectedSize() === size" [class.badge-outline]="selectedSize() !== size"
+                        (click)="selectSize(size)">
                         {{ size }}
-                    </span>
+                    </button>
                     }
+                    
+                    @if (!selectedSize()) {
+                    <p class="text-sm text-red-400 mt-2">
+                        Debes seleccionar una talla
+                    </p>
+                    } @else {
+                    <p class="text-sm text-green-400 mt-2">
+                        Talla seleccionada: {{ selectedSize() }}
+                    </p>
+                    }
+
                 </div>
             </div>
 
@@ -94,7 +107,7 @@
             </div>
 
             <div class="pt-4 flex flex-col sm:flex-row gap-4">
-                <button class="btn btn-primary flex-1 h-14 text-base">
+                <button class="btn btn-primary flex-1 h-14 text-base" [disabled]="!selectedSize()" (click)="addToBag()">
                     Añadir al carrito
                 </button>
                 <button class="btn btn-outline flex-1 h-14 text-base">
