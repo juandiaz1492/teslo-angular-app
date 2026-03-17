@@ -10,7 +10,8 @@
     }
 </div>
 
+<div class="mb-6">
+    <app-shared-pagination [pages]="productsResource.value()?.pages ?? 1"
+        [currentPage]="paginationService.currentPage()" />
 
-<app-shared-pagination 
-[pages]="productsResource.value()?.pages ?? 1"
- [currentPage]="paginationService.currentPage()" />
+</div>
