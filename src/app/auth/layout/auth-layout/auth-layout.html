@@ -30,8 +30,14 @@
         <h1 class="text-2xl font-bold text-secondary text-center mb-2">
             @if (currentRoute().includes('register')) {
             Crear cuenta
-            } @else {
+            }
+
+            @if (currentRoute().includes('login')){
             Iniciar sesión
+            }
+
+            @if (currentRoute().includes('verify')){
+            Verifica tu Cuenta
             }
         </h1>
 

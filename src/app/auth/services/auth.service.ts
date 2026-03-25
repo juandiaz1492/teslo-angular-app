@@ -4,18 +4,18 @@ import { User } from '../interfaces/user.interface';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { AuthResponse } from '../interfaces/auth-response.interface';
-import { catchError, firstValueFrom, map, Observable, of, tap } from 'rxjs';
+import { catchError, firstValueFrom, map, Observable, of, switchMap, tap } from 'rxjs';
 import { PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { toast } from 'ngx-sonner';
 
 type AuthStatus = 'checking' | 'authenticated' | 'not-authenticated'
 
 const baseUrl = environment.baseUrl;
+const baseUrlAuth = environment.baseUrlAuth;
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-
-    //para el localStorage
     private platformId = inject(PLATFORM_ID);
     private router = inject(Router);
     private isBrowser = isPlatformBrowser(this.platformId);
@@ -30,6 +30,7 @@ export class AuthService {
     checkStatusResource = resource({
         loader: () => firstValueFrom(this.checkStatus())
     });
+
 
     authStatus = computed<AuthStatus>(() => {
         if (this._authStatus() == 'checking') return 'checking';
@@ -48,24 +49,35 @@ export class AuthService {
         this.user()?.roles.includes('admin') ?? false);
 
     login(email: string, password: string): Observable<boolean> {
-        return this.http.post<AuthResponse>(`${baseUrl}/auth/login`, {
-            email: email,
+        return this.http.post<AuthResponse>(`${baseUrlAuth}/user/login`, {
+            mail: email,
             password: password,
         }).pipe(
             map((resp) => this.handleLoginSuccess(resp)),
             catchError((error: any) => this.handleLoginError(error))
-        )
+        );
     }
 
     register(email: string, password: string, username: string): Observable<boolean> {
-
-        return this.http.post<AuthResponse>(`${baseUrl}/auth/register`, {
-            email: email,
+        return this.http.post<AuthResponse>(`${baseUrlAuth}/user/register`, {
+            mail: email,
             password: password,
-            fullName: username
+            username: username
+        }).pipe(
+            map(() => true));
+    }
+
+    verifyToken(token: string): Observable<boolean> {
+        return this.http.get(`${baseUrlAuth}/user/verify`, {
+            params: { token }
         }).pipe(
             map(() => true),
-        )
+            catchError((error: any) => {
+                const message = error?.error?.message || error?.error || 'Error verificando la cuenta';
+                toast.error(message);
+                return of(false);
+            })
+        );
     }
 
     checkStatus(): Observable<boolean> {
@@ -88,13 +100,11 @@ export class AuthService {
                 this._authStatus.set('not-authenticated');
                 this._token.set(null);
                 localStorage.removeItem('token');
-                this.router.navigateByUrl('/auth/login');
+                //this.router.navigateByUrl('/auth/login');
                 return of(false);
             })
         );
     }
-
-
 
 
     logout() {
@@ -124,6 +134,12 @@ export class AuthService {
 
     private handleLoginError(error: any) {
         this.logout();
+
+        const message = error?.error?.message || error?.error;
+        if (message) {
+            toast.error(message);
+        }
+
         return of(false);
     }
 }

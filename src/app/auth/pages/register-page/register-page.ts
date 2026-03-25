@@ -3,12 +3,11 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { Router, RouterLink } from '@angular/router';
 import { toast } from 'ngx-sonner';
-import { NgxSonnerToaster } from 'ngx-sonner';
 
 
 @Component({
   selector: 'app-register-page',
-  imports: [RouterLink, ReactiveFormsModule, NgxSonnerToaster],
+  imports: [RouterLink, ReactiveFormsModule],
   templateUrl: './register-page.html',
 })
 export class RegisterPage {
@@ -51,8 +50,15 @@ export class RegisterPage {
 
     this.authService.register(email!, password!, username!).subscribe({
       next: () => {
-        toast.success('Cuenta creada correcatemente');
-        this.router.navigateByUrl('/auth/login');
+        //para no pedirlo de nuevo en el verify
+        sessionStorage.setItem('pendingRegister', JSON.stringify({
+          email,
+          password,
+          username
+        }));
+
+        toast.success('Usuario creado correctamente. Revisa tu correo 📩');
+        this.router.navigateByUrl('/auth/verify');
       },
       error: (err) => {
         const message = err?.error?.message;

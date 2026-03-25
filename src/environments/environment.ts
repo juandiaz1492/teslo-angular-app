@@ -1,4 +1,4 @@
 export const environment = {
-    baseUrl: 'https://teslo-angular-app.onrender.com/api'
+  baseUrl: 'https://teslo-nest-api.onrender.com/api',
+  baseUrlAuth: 'https://teslo-spring-api.onrender.com'
 };
-
