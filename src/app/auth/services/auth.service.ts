@@ -64,7 +64,13 @@ export class AuthService {
             password: password,
             username: username
         }).pipe(
-            map(() => true));
+            map(() => true),
+            catchError((error: any) => {
+            const message = error?.error?.message || error?.error || 'Error al registrar usuario';
+            toast.error(message);
+            return of(false);
+        })    
+        );
     }
 
     verifyToken(token: string): Observable<boolean> {
